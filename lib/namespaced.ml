@@ -100,6 +100,11 @@ let filepath_of_filename ?(nms=[]) filename =
   match List.rev (Support.split_on_char Filename.dir_sep.[0] filename) with
   | [] -> raise @@ Invalid_argument "Invalid name for a compilation unit"
   | _filename :: r ->
+    Format.eprintf "[filepath_of_filename]@;filename=%s@;name=%a@;dir_sep=%s@;_filename=%s@;r=%a@."
+      filename
+      Unitname.pp name
+      Filename.dir_sep _filename
+      (Format.pp_print_list ~pp_sep:(Format.pp_print_space) Format.pp_print_string) r;
     { namespace = nms @ List.rev r ;
       name;
     }
