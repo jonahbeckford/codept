@@ -14,11 +14,14 @@ let pp ppf r =
     Pp.(list estring) r.libs Pp.(list estring) r.ppxs
     Pp.(opt estring) r.pp
 
+    let dos2unix s = (* strip \r *)
+    String.to_seq s |> Seq.filter (fun c -> c <> '\r') |> String.of_seq
+
 let run cmd =
   let cin = Unix.open_process_in cmd in
   let rec read l =
   try
-    match input_line cin with
+    match input_line cin |> dos2unix with
     | "" -> read l
     | s -> read (s::l)
   with

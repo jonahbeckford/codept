@@ -23,10 +23,13 @@ type task =
   }
 
 
+  let dos2unix s = (* strip \r *)
+    String.to_seq s |> Seq.filter (fun c -> c <> '\r') |> String.of_seq
+
 let compiler_dir =
   lazy (
     let ch = Unix.open_process_in "ocamlc -where" in
-    let s= input_line ch in
+    let s= input_line ch |> dos2unix in
     close_in ch;
     s ^ "/"
   )

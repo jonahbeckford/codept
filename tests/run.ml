@@ -232,11 +232,14 @@ module Branch(Param:Stage.param) = struct
 
   let deps_test_single l = deps_test (None,l)
 
+  let dos2unix s = (* strip \r *)
+    String.to_seq s |> Seq.filter (fun c -> c <> '\r') |> String.of_seq
+
   let compiler_libs =
     let cmd = "ocamlc -where " in
     let cin = Unix.open_process_in cmd in
     try
-      [Filename.concat (input_line cin) "compiler-libs" ]
+      [Filename.concat (dos2unix (input_line cin)) "compiler-libs" ]
     with
       End_of_file -> []
 
